@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>📄 Nexpose 보고서 생성</title>
+  <link rel="stylesheet" href="/generatereport.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>📄 Nexpose 보고서 생성</h1>
+
+  <form action="/generatereport" method="POST">
+    <label for="reportId">
+      📋 생성할 보고서:
+      <select name="reportId" id="reportId" required>
+        <option value="">보고서 선택</option>
+        <% reports.forEach(report => { %>
+          <option value="<%= report.id %>"><%= report.name %> (ID: <%= report.id %>)</option>
+        <% }) %>
+      </select>
+    </label>
+
+    <button type="submit">📤 보고서 생성 요청</button>
+  </form>
+
+  <a href="/">🏠 홈으로 돌아가기</a>
+</body>
+</html>

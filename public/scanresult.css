@@ -1,0 +1,153 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  padding: 40px;
+  max-width: 750px;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+h2, h3, h4 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 16px;
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+strong {
+  color: #d35400;
+}
+
+ul {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+ul li {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+label {
+  font-weight: 500;
+  font-size: 15px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  font-size: 15px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+}
+
+button {
+  padding: 10px 14px;
+  background-color: #3498db;
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 6px;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+a {
+  display: inline-block;
+  margin-top: 30px;
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+hr {
+  margin: 30px 0 20px;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+/* ✅ 스캔 목록 스타일 */
+.scan-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.scan-item {
+  margin-bottom: 24px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ddd;
+}
+
+/* ✅ 모달 스타일 */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 30px 25px;
+  width: 450px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.close-button {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: #444;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

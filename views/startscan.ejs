@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>🔍 스캔 실행</title>
+  <link rel="stylesheet" href="/startscan.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h2>🔍 스캔 실행</h2>
+
+  <form action="/startscan" method="POST">
+    <label>
+      📄 사이트 선택:
+      <select name="siteId" id="siteSelector" required onchange="onSiteChange()">
+        <option value="">-- 사이트를 선택하세요 --</option>
+        <% sites.forEach(site => { %>
+          <option value="<%= site.id %>"><%= site.name %> (ID: <%= site.id %>)</option>
+        <% }); %>
+      </select>
+    </label>
+
+    <label>
+      🌐 대상 호스트(IP):
+      <input type="text" name="host" id="hostInput" placeholder="예: 192.168.0.100 또는 복수 입력 시 ,로 구분" required />
+    </label>
+
+    <label>
+      ⚙️ 엔진 ID:
+      <select name="engineId" id="engineSelector" required>
+        <% engines.forEach(engine => { %>
+          <option value="<%= engine.id %>"><%= engine.name %> (ID: <%= engine.id %>)</option>
+        <% }); %>
+      </select>
+    </label>
+
+    <label>
+      📝 스캔 템플릿:
+      <select name="templateId" id="templateSelector" required>
+        <% templates.forEach(template => { %>
+          <option value="<%= template.id %>" <%= template.id === 'full-audit' ? 'selected' : '' %>>
+            <%= template.name %> (<%= template.id %>)
+          </option>
+        <% }); %>
+      </select>
+    </label>
+
+    <button type="submit">스캔 시작</button>
+  </form>
+
+  <a href="/">⬅ 홈으로</a>
+
+  <script>
+    async function onSiteChange() {
+      const siteId = document.getElementById('siteSelector').value;
+      if (!siteId) return;
+  
+      await fetchSiteAssets(siteId);
+      await fetchSiteEngine(siteId);
+      await fetchSiteTemplate(siteId); // ✅ 추가
+    }
+  
+    async function fetchSiteAssets(siteId) {
+      const hostInput = document.getElementById('hostInput');
+      try {
+        const res = await fetch(`/startscan/site-assets/${siteId}`);
+        const data = await res.json();
+        if (data.success && data.addresses.length > 0) {
+          hostInput.value = data.addresses.join(', ');
+        } else {
+          hostInput.value = '';
+          alert('이 사이트에 포함된 자산이 없습니다.');
+        }
+      } catch (err) {
+        console.error('자산 가져오기 실패:', err);
+        alert('자산 정보를 불러오는 데 실패했습니다.');
+        hostInput.value = '';
+      }
+    }
+  
+    async function fetchSiteEngine(siteId) {
+      const engineSelector = document.getElementById('engineSelector');
+      try {
+        const res = await fetch(`/startscan/site-engine/${siteId}`);
+        const data = await res.json();
+        if (data.success && data.engineId) {
+          engineSelector.value = data.engineId;
+        }
+      } catch (err) {
+        console.error('엔진 ID 가져오기 실패:', err);
+      }
+    }
+  
+    // ✅ 새로 추가: 사이트에 할당된 템플릿 ID 가져와 드롭다운에 반영
+    async function fetchSiteTemplate(siteId) {
+      const templateSelector = document.getElementById('templateSelector');
+      try {
+        const res = await fetch(`/startscan/site-template/${siteId}`);
+        const data = await res.json();
+        if (data.success && data.templateId) {
+          templateSelector.value = data.templateId;
+        }
+      } catch (err) {
+        console.error('템플릿 ID 가져오기 실패:', err);
+      }
+    }
+  </script>
+</body>
+</html>

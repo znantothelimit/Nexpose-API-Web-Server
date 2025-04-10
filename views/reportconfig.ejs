@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>📄 Nexpose 보고서 설정</title>
+  <link rel="stylesheet" href="/reportconfig.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const siteSelect = document.getElementById('siteSelect');
+      const scanSelect = document.getElementById('scanSelect');
+      const scanLoading = document.getElementById('scanLoading');
+      const formatSelect = document.getElementById('formatSelect');
+      const queryField = document.getElementById('queryField');
+
+      // 사이트 선택 시 스캔 목록 로드
+      siteSelect.addEventListener('change', async () => {
+        const siteId = siteSelect.value;
+        if (!siteId) return;
+
+        scanLoading.style.display = 'inline';
+        scanSelect.innerHTML = '<option value="">스캔 목록 불러오는 중...</option>';
+        scanSelect.disabled = true;
+
+        try {
+          const res = await fetch(`/reportconfig/scans/${siteId}`);
+          const scans = await res.json();
+
+          scanSelect.innerHTML = '<option value="">스캔 선택</option>';
+          scans.forEach(scan => {
+            const option = document.createElement('option');
+            const time = new Date(scan.startTime).toLocaleString();
+            option.value = scan.id;
+            option.textContent = `${scan.scanName} (${scan.status}, ${time})`;
+            scanSelect.appendChild(option);
+          });
+
+          scanSelect.disabled = false;
+        } catch (err) {
+          scanSelect.innerHTML = '<option value="">⚠ 스캔 목록 로딩 실패</option>';
+        } finally {
+          scanLoading.style.display = 'none';
+        }
+      });
+
+      // 출력 포맷에 따라 SQL 입력 필드 표시 여부 결정
+      formatSelect.addEventListener('change', () => {
+        if (formatSelect.value === 'sql-query') {
+          queryField.style.display = 'block';
+        } else {
+          queryField.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>📄 Nexpose 보고서 설정</h1>
+
+  <form action="/reportconfig" method="POST">
+    <label>
+      🏷 사이트:
+      <select id="siteSelect" required>
+        <option value="">사이트 선택</option>
+        <% sites.forEach(site => { %>
+          <option value="<%= site.id %>"><%= site.name %></option>
+        <% }) %>
+      </select>
+    </label>
+
+    <label>
+      🧪 스캔:
+      <select name="scanId" id="scanSelect" required disabled>
+        <option value="">먼저 사이트를 선택하세요</option>
+      </select>
+      <span id="scanLoading" style="display:none">🔄</span>
+    </label>
+
+    <label>
+      📘 보고서 이름:
+      <input type="text" name="name" placeholder="예: 취약점 리포트" />
+    </label>
+
+    <label>
+      🌐 언어:
+      <input type="text" name="language" placeholder="예: en-US 또는 ko-KR" />
+    </label>
+
+    <label>
+      🧾 보고서 템플릿:
+      <select name="template" required>
+        <option value="">템플릿 선택</option>
+        <% templates.forEach(tpl => { %>
+          <option value="<%= tpl.id %>"><%= tpl.name %></option>
+        <% }) %>
+      </select>
+    </label>
+
+    <label>
+      📂 출력 포맷:
+      <select name="format" id="formatSelect" required>
+        <option value="">출력 형식 선택</option>
+        <% formats.forEach(fmt => { %>
+          <option value="<%= fmt.format %>"><%= fmt.format.toUpperCase() %></option>
+        <% }) %>
+      </select>
+    </label>    
+
+    <div id="queryField" style="display:none">
+      <label>
+        🧠 SQL 쿼리 (Reporting Data Model용):
+        <textarea name="query" rows="6" placeholder="예: SELECT * FROM dim_asset"></textarea>
+      </label>
+    </div>
+
+    <button type="submit">📤 보고서 생성</button>
+  </form>
+
+  <a href="/">⬅ 홈으로</a>
+</body>
+</html>

@@ -1,0 +1,122 @@
+/* public/reportconfig.css */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f4f4;
+  padding: 50px;
+  max-width: 720px;
+  margin: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 26px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+label {
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  color: #444;
+}
+
+input[type="number"],
+input[type="text"],
+select {
+  padding: 12px;
+  font-size: 15px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  outline: none;
+}
+
+select:disabled {
+  background-color: #eaeaea;
+  color: #999;
+}
+
+select option {
+  color: #000;
+  background-color: #fff;
+  padding: 10px;
+  font-size: 15px;
+}
+
+textarea {
+  padding: 12px;
+  font-size: 15px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  outline: none;
+}
+
+button {
+  padding: 14px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+a {
+  display: inline-block;
+  margin-top: 30px;
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#scanLoading {
+  font-size: 14px;
+  color: #999;
+  margin-left: 10px;
+  display: inline-block;
+}

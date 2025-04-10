@@ -1,0 +1,83 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f8fc;
+  padding: 40px;
+  max-width: 700px;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+label {
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+}
+
+/* input + select + textarea 공통 스타일 */
+input[type="text"],
+select,
+textarea {
+  padding: 10px;
+  font-size: 15px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+/* 자동 채운 hostInput 강조 */
+#hostInput:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+/* textarea 전용 */
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* 버튼 */
+button {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* 하단 링크 */
+a {
+  display: inline-block;
+  margin-top: 25px;
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}

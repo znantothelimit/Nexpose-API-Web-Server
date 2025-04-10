@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>📋 최근 스캔 결과</title>
+  <link rel="stylesheet" href="/scanresult.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h2>📋 최근 스캔 결과 목록</h2>
+
+  <% if (scans.length > 0) { %>
+    <ul class="scan-list">
+      <% scans.forEach(scan => { %>
+        <li class="scan-item">
+          🔍 <strong><%= scan.scanName %></strong>
+          (<%= scan.status %>, 시작: <%= new Date(scan.startTime).toLocaleString() %>)  
+          <br>
+          <button class="view-summary" data-id="<%= scan.id %>">➡️ 결과 요약 보기</button>
+        </li>
+      <% }); %>
+    </ul>
+  <% } else { %>
+    <p>📭 최근 스캔 이력이 없습니다.</p>
+  <% } %>
+
+  <a href="/">⬅ 홈으로</a>
+
+  <!-- 📋 결과 요약 모달 -->
+  <div id="scanModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h3>📋 스캔 결과 요약</h3>
+      <div id="modalBody">
+        <p>불러오는 중...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/scanresult.js"></script>
+</body>
+</html>

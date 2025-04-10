@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>🔧 Nexpose 사이트 생성</title>
+  <link rel="stylesheet" href="/createsite.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>🔧 Nexpose 사이트 생성</h1>
+
+  <form id="siteForm" action="/createsite" method="POST">
+    <label for="name">사이트 이름</label>
+    <input type="text" name="name" id="name" required>
+
+    <label for="target">대상 IP / 호스트 <span style="font-weight: normal; color: #888;">(쉼표로 구분)</span></label>
+    <input type="text" name="target" id="target" required placeholder="예: 192.168.0.1, 192.168.0.10-192.168.0.20, 192.168.0.0/24">
+
+    <label for="excluded">❌ 제외 자산 (쉼표로 구분)</label>
+    <input type="text" name="excluded" id="excluded" placeholder="예: 192.168.0.1, 192.168.0.10-192.168.0.20, 192.168.0.0/24">
+
+    <label for="engineId">⚙️ 스캔 엔진 선택</label>
+    <select name="engineId" id="engineId" required>
+      <option value="">-- 스캔 엔진 선택 --</option>
+      <% engines.forEach(engine => { %>
+        <option value="<%= engine.id %>"><%= engine.name %> (ID: <%= engine.id %>)</option>
+      <% }); %>
+    </select>
+
+    <label for="scanTemplateId">📝 스캔 템플릿 선택</label>
+    <select name="scanTemplateId" id="scanTemplateId" required>
+      <option value="">-- 스캔 템플릿 선택 --</option>
+      <% templates.forEach(template => { %>
+        <option value="<%= template.id %>"><%= template.name %> (<%= template.id %>)</option>
+      <% }); %>
+    </select>
+
+    <!-- 숨겨진 필드 -->
+    <input type="hidden" name="service" id="hiddenService">
+    <input type="hidden" name="username" id="hiddenUsername">
+    <input type="hidden" name="password" id="hiddenPassword">
+    <input type="hidden" name="domain" id="hiddenDomain">
+    <input type="hidden" name="permissionElevation" id="hiddenElevation">
+    <input type="hidden" name="permissionElevationUsername" id="hiddenElevationUsername">
+    <input type="hidden" name="permissionElevationPassword" id="hiddenElevationPassword">
+    <input type="hidden" name="hostRestriction" id="hiddenHostRestriction">
+    <input type="hidden" name="portRestriction" id="hiddenPortRestriction">
+
+    <button type="button" onclick="openModal()">➕ 자격증명 추가</button>
+    <br><br>
+    <button type="submit">사이트 생성</button>
+  </form>
+
+  <a href="/">⬅️ 돌아가기</a>
+
+  <!-- 자격증명 모달 -->
+  <div id="credentialModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>🔐 자격증명 입력</h3>
+
+      <label>서비스</label>
+      <select id="modalService">
+        <option value="ssh">SSH</option>
+        <option value="ftp">FTP</option>
+        <option value="http">HTTP</option>
+        <option value="cifs">CIFS</option>
+      </select>
+
+      <label>사용자 이름</label>
+      <input type="text" id="modalUsername">
+
+      <label>비밀번호</label>
+      <input type="password" id="modalPassword">
+
+      <label>도메인 (선택)</label>
+      <input type="text" id="modalDomain">
+
+      <hr>
+      <h4>🛡 권한 상승 (선택)</h4>
+      <label>방식</label>
+      <select id="modalElevation">
+        <option value="none">없음</option>
+        <option value="sudo">sudo</option>
+        <option value="sudosu">sudosu</option>
+        <option value="su">su</option>
+        <option value="pbrun">pbrun</option>
+        <option value="privileged-exec">privileged-exec</option>
+      </select>
+
+      <label>상승 계정 이름</label>
+      <input type="text" id="modalElevationUsername">
+
+      <label>상승 계정 비밀번호</label>
+      <input type="password" id="modalElevationPassword">
+
+      <hr>
+      <h4 id="restrictionToggle" onclick="toggleRestriction()" style="cursor: pointer; color: #3498db;">
+        ➕ 제한 사항
+      </h4>
+
+      <div id="restrictionFields" style="display: none;">
+        <label>IP 주소 또는 호스트 이름</label>
+        <input type="text" id="modalHostRestriction" placeholder="예: 192.168.0.1">
+
+        <label>포트</label>
+        <input type="number" id="modalPortRestriction" placeholder="예: 22">
+      </div>
+
+      <hr>
+      <button type="button" onclick="applyCredential()">✅ 자격증명 추가</button>
+    </div>
+  </div>
+
+  <script>
+    function openModal() {
+      document.getElementById('credentialModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('credentialModal').style.display = 'none';
+    }
+
+    function toggleRestriction() {
+      const box = document.getElementById('restrictionFields');
+      const toggleText = document.getElementById('restrictionToggle');
+
+      const isVisible = box.style.display === 'block';
+      box.style.display = isVisible ? 'none' : 'block';
+      toggleText.innerHTML = isVisible ? '➕ 제한 사항' : '➖ 제한 사항';
+    }
+
+    function applyCredential() {
+      document.getElementById('hiddenService').value = document.getElementById('modalService').value;
+      document.getElementById('hiddenUsername').value = document.getElementById('modalUsername').value;
+      document.getElementById('hiddenPassword').value = document.getElementById('modalPassword').value;
+      document.getElementById('hiddenDomain').value = document.getElementById('modalDomain').value;
+      document.getElementById('hiddenElevation').value = document.getElementById('modalElevation').value;
+      document.getElementById('hiddenElevationUsername').value = document.getElementById('modalElevationUsername').value;
+      document.getElementById('hiddenElevationPassword').value = document.getElementById('modalElevationPassword').value;
+      document.getElementById('hiddenHostRestriction').value = document.getElementById('modalHostRestriction').value;
+      document.getElementById('hiddenPortRestriction').value = document.getElementById('modalPortRestriction').value;
+
+      closeModal();
+      alert('자격증명이 추가되었습니다.');
+    }
+  </script>
+</body>
+</html>

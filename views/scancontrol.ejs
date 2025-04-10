@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>⏯️ 스캔 제어</title>
+  <link rel="stylesheet" href="/scancontrol.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h2>⏯️ 스캔 제어</h2>
+
+  <form action="/scancontrol" method="POST">
+    <label>
+      📄 실행 중인 스캔 선택:
+      <select name="scanId" required>
+        <% if (activeScans.length > 0) { %>
+          <% activeScans.forEach(scan => { %>
+            <option value="<%= scan.id %>">
+              ID: <%= scan.id %> | Status: <%= scan.status %> | Started: <%= new Date(scan.startTime).toLocaleString() %>
+            </option>
+          <% }); %>
+        <% } else { %>
+          <option disabled selected>현재 실행 중인 스캔이 없습니다</option>
+        <% } %>
+      </select>
+    </label>
+
+    <label>
+      ⚙️ 제어 동작:
+      <select name="status" required>
+        <option value="pause">⏸ 일시중지</option>
+        <option value="resume">▶️ 재개</option>
+        <option value="stop">⏹ 정지</option>
+      </select>
+    </label>
+
+    <button type="submit" <%= activeScans.length === 0 ? 'disabled' : '' %>>제어 실행</button>
+  </form>
+
+  <a href="/">⬅ 홈으로</a>
+</body>
+</html>
